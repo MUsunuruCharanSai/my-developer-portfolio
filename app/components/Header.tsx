@@ -3,32 +3,31 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Menu, X } from "lucide-react"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { useMediaQuery } from "@/hooks/use-media-query"
+
+const navItems = [
+  { href: "#home", label: "Home" },
+  { href: "#about", label: "About" },
+  { href: "#experience", label: "Experience" },
+  { href: "#skills", label: "Skills" },
+  { href: "#projects", label: "Projects" },
+  { href: "#contact", label: "Contact" },
+]
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
-  const isMobile = useMediaQuery("(max-width: 768px)")
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
+  const toggleMenu = () => setIsMenuOpen((open) => !open)
   const closeMenu = () => setIsMenuOpen(false)
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10)
-    }
-
-    // Close menu when resizing to desktop
+    const handleScroll = () => setIsScrolled(window.scrollY > 8)
     const handleResize = () => {
-      if (window.innerWidth > 768) {
-        setIsMenuOpen(false)
-      }
+      if (window.innerWidth > 1024) setIsMenuOpen(false)
     }
 
     window.addEventListener("scroll", handleScroll)
     window.addEventListener("resize", handleResize)
-
     return () => {
       window.removeEventListener("scroll", handleScroll)
       window.removeEventListener("resize", handleResize)
@@ -37,101 +36,64 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed w-full z-50 transition-all duration-300 ${
-        isScrolled ? "bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm shadow-md py-2" : "bg-transparent py-4"
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
+        isScrolled || isMenuOpen
+          ? "border-b border-[#d4af37]/25 bg-[#070604]/85 backdrop-blur-xl shadow-[0_12px_40px_rgba(0,0,0,0.35)]"
+          : "bg-transparent"
       }`}
     >
-      <div className="container mx-auto px-4 flex justify-between items-center">
+      <div className="page-wrap flex h-[4.5rem] items-center justify-between">
         <Link
-          href="/"
-          className="text-xl sm:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600"
+          href="#home"
+          scroll={false}
+          className="font-display text-[16px] font-semibold tracking-[0.14em] text-[#f7f1e4]"
         >
           CHARAN SAI
         </Link>
 
-        <div className="flex items-center">
-          <nav className="hidden md:flex space-x-1 lg:space-x-6">
-            <NavLink href="#home" label="Home" />
-            <NavLink href="#about" label="About" />
-            <NavLink href="#skills" label="Skills" />
-            <NavLink href="#projects" label="Projects" />
-            <NavLink href="#contact" label="Contact" />
-          </nav>
+        <nav className="hidden items-center lg:flex" aria-label="Primary">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              scroll={false}
+              className="rounded-md px-2.5 py-1.5 text-[12px] tracking-[0.14em] uppercase text-[#cfc3ab] transition-colors hover:text-[#e8c547]"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
 
-          <button
-            className="md:hidden p-2 rounded-full hover:bg-gray-100 transition-colors"
-            onClick={toggleMenu}
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
+        <button
+          className="rounded-md p-2 text-[#e9dfc8] transition-colors hover:bg-[#e8c547]/10 hover:text-[#e8c547] lg:hidden"
+          onClick={toggleMenu}
+          aria-expanded={isMenuOpen}
+          aria-controls="mobile-nav"
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+        >
+          {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
       </div>
 
-      {/* Mobile menu with animation */}
       <div
-        className={`md:hidden fixed inset-0 bg-white dark:bg-gray-900 z-40 transition-transform duration-300 ease-in-out ${
-          isMenuOpen ? "translate-x-0" : "translate-x-full"
-        }`}
-        style={{ top: "60px" }}
+        id="mobile-nav"
+        className={`border-b border-[#d4af37]/20 bg-[#070604]/95 lg:hidden ${isMenuOpen ? "block" : "hidden"}`}
       >
-        <nav className="container mx-auto px-4 py-8 flex flex-col space-y-6">
-          <NavLink href="#home" label="Home" onClick={closeMenu} isMobile={true} />
-          <NavLink href="#about" label="About" onClick={closeMenu} isMobile={true} />
-          <NavLink href="#skills" label="Skills" onClick={closeMenu} isMobile={true} />
-          <NavLink href="#projects" label="Projects" onClick={closeMenu} isMobile={true} />
-          <NavLink href="#contact" label="Contact" onClick={closeMenu} isMobile={true} />
+        <nav className="page-wrap flex flex-col py-3" aria-label="Mobile">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              scroll={false}
+              onClick={closeMenu}
+              className="rounded-md px-3 py-3 text-base text-[#e9dfc8] transition-colors hover:bg-[#e8c547]/10 hover:text-[#e8c547]"
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
       </div>
-
-      {/* Overlay for mobile menu */}
-      {isMenuOpen && (
-        <div className="md:hidden fixed inset-0 bg-black/20 z-30" onClick={closeMenu} style={{ top: "60px" }} />
-      )}
     </header>
-  )
-}
-
-const NavLink = ({
-  href,
-  label,
-  onClick,
-  isMobile = false,
-}: {
-  href: string
-  label: string
-  onClick?: () => void
-  isMobile?: boolean
-}) => {
-  if (isMobile) {
-    return (
-      <Link
-        href={href}
-        scroll={false}
-        className="text-xl font-medium py-2 hover:text-blue-600 transition duration-300"
-        onClick={onClick}
-      >
-        {label}
-      </Link>
-    )
-  }
-
-  return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Link
-          href={href}
-          scroll={false}
-          className="px-3 py-2 text-sm lg:text-base font-medium hover:text-blue-600 transition duration-300"
-          onClick={onClick}
-        >
-          {label}
-        </Link>
-      </PopoverTrigger>
-      <PopoverContent className="w-64">
-        <p className="text-sm">{`Learn more about ${label.toLowerCase()}.`}</p>
-      </PopoverContent>
-    </Popover>
   )
 }
 
