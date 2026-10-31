@@ -5,26 +5,23 @@ import { useEffect } from "react"
 const SmoothScroll = () => {
   useEffect(() => {
     const smoothScroll = (e: MouseEvent) => {
-      const target = e.target as HTMLAnchorElement
-      if (target.hash) {
-        e.preventDefault()
-        const targetElement = document.querySelector(target.hash)
-        if (targetElement) {
-          targetElement.scrollIntoView({
-            behavior: "smooth",
-          })
-        }
-      }
+      const anchor = (e.target as HTMLElement).closest("a")
+      if (!anchor?.hash) return
+
+      const targetElement = document.querySelector(anchor.hash)
+      if (!targetElement) return
+
+      e.preventDefault()
+      targetElement.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      })
     }
 
-    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-      anchor.addEventListener("click", smoothScroll)
-    })
+    document.addEventListener("click", smoothScroll)
 
     return () => {
-      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.removeEventListener("click", smoothScroll)
-      })
+      document.removeEventListener("click", smoothScroll)
     }
   }, [])
 

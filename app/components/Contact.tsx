@@ -3,12 +3,12 @@
 import type React from "react"
 
 import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { motion } from "framer-motion"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Button } from "@/components/ui/button"
 import { Phone, Mail, Linkedin, Send } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
+import SectionHeader from "./SectionHeader"
 
 const Contact = () => {
   const [name, setName] = useState("")
@@ -21,10 +21,7 @@ const Contact = () => {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Simulate sending an email (replace this with actual email sending logic in the future)
     console.log("Form submitted:", { name, email, message })
-
-    // Simulate a delay to mimic network request
     await new Promise((resolve) => setTimeout(resolve, 1000))
 
     toast({
@@ -33,7 +30,6 @@ const Contact = () => {
       variant: "default",
     })
 
-    // Reset form fields
     setName("")
     setEmail("")
     setMessage("")
@@ -41,124 +37,118 @@ const Contact = () => {
   }
 
   return (
-    <section id="contact" className="py-16 sm:py-20 bg-gray-100">
-      <div className="container mx-auto px-4">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-8 sm:mb-12 text-center">Contact Me</h2>
+    <section id="contact" className="section-shell">
+      <div className="page-wrap">
+        <SectionHeader eyebrow="Connect" title="Contact Me" />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto">
-          <Card className="h-full">
-            <CardHeader className="pb-2 sm:pb-4">
-              <CardTitle className="text-xl sm:text-2xl">Get in Touch</CardTitle>
-              <CardDescription className="text-sm sm:text-base">
-                Fill out the form and I'll get back to you as soon as possible.
-              </CardDescription>
-            </CardHeader>
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <motion.div
+            initial={{ opacity: 0, y: 22 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="surface surface-glow p-7 sm:p-9"
+          >
+            <h3 className="text-2xl font-medium text-[#f7f1e4]">Get in Touch</h3>
+            <p className="mt-2 mb-7 text-sm leading-7 text-[#c4b48f]">
+              Fill out the form and I will get back to you as soon as possible.
+            </p>
 
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <Input
-                    type="text"
-                    placeholder="Your Name"
-                    required
-                    className="w-full"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </div>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <Input
+                type="text"
+                placeholder="Your Name"
+                required
+                aria-label="Your Name"
+                className="h-12 w-full rounded-xl border-[#d4af37]/25 bg-black/40 text-[#f7f1e4] placeholder:text-[#8f846c]"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <Input
+                type="email"
+                placeholder="Your Email"
+                required
+                aria-label="Your Email"
+                className="h-12 w-full rounded-xl border-[#d4af37]/25 bg-black/40 text-[#f7f1e4] placeholder:text-[#8f846c]"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <Textarea
+                placeholder="Your Message"
+                required
+                aria-label="Your Message"
+                className="min-h-[160px] rounded-xl border-[#d4af37]/25 bg-black/40 text-[#f7f1e4] placeholder:text-[#8f846c]"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              />
+              <button type="submit" className="btn-gold h-12 w-full disabled:opacity-60" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  "Sending..."
+                ) : (
+                  <>
+                    Send Message <Send className="ml-2 h-4 w-4" />
+                  </>
+                )}
+              </button>
+            </form>
+          </motion.div>
 
-                <div>
-                  <Input
-                    type="email"
-                    placeholder="Your Email"
-                    required
-                    className="w-full"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
+          <motion.div
+            initial={{ opacity: 0, y: 22 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="surface surface-glow p-7 sm:p-9"
+          >
+            <h3 className="text-2xl font-medium text-[#f7f1e4]">Contact Information</h3>
+            <p className="mt-2 mb-7 text-sm leading-7 text-[#c4b48f]">
+              Feel free to reach out through any of these channels.
+            </p>
 
-                <div>
-                  <Textarea
-                    placeholder="Your Message"
-                    required
-                    className="min-h-[120px] sm:min-h-[150px]"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                  />
-                </div>
-
-                <Button
-                  type="submit"
-                  className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    "Sending..."
-                  ) : (
-                    <>
-                      Send Message <Send className="ml-2 h-4 w-4" />
-                    </>
-                  )}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-
-          <Card className="h-full">
-            <CardHeader className="pb-2 sm:pb-4">
-              <CardTitle className="text-xl sm:text-2xl">Contact Information</CardTitle>
-              <CardDescription className="text-sm sm:text-base">
-                Feel free to reach out through any of these channels.
-              </CardDescription>
-            </CardHeader>
-
-            <CardContent className="space-y-6">
-              <div className="flex items-center space-x-3">
-                <div className="bg-purple-100 p-2 rounded-full">
-                  <Phone className="h-5 w-5 text-purple-600" />
+            <div className="space-y-5">
+              <div className="flex items-center gap-4">
+                <div className="rounded-xl border border-[#d4af37]/30 bg-[#e8c547]/10 p-3">
+                  <Phone className="h-4 w-4 text-[#e8c547]" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Phone</p>
-                  <p className="font-medium">+91 7601017292</p>
+                  <p className="text-xs uppercase tracking-[0.16em] text-[#c4b48f]">Phone</p>
+                  <p className="text-sm font-medium text-[#f7f1e4]">+91 7601017292</p>
                 </div>
               </div>
 
-              <div className="flex items-center space-x-3">
-                <div className="bg-purple-100 p-2 rounded-full">
-                  <Mail className="h-5 w-5 text-purple-600" />
+              <div className="flex items-center gap-4">
+                <div className="rounded-xl border border-[#d4af37]/30 bg-[#e8c547]/10 p-3">
+                  <Mail className="h-4 w-4 text-[#e8c547]" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Email</p>
-                  <p className="font-medium break-all">charansaimusunuru@gmail.com</p>
+                  <p className="text-xs uppercase tracking-[0.16em] text-[#c4b48f]">Email</p>
+                  <p className="break-all text-sm font-medium text-[#f7f1e4]">charansaimusunuru@gmail.com</p>
                 </div>
               </div>
 
-              <div className="flex items-center space-x-3">
-                <div className="bg-purple-100 p-2 rounded-full">
-                  <Linkedin className="h-5 w-5 text-purple-600" />
+              <div className="flex items-center gap-4">
+                <div className="rounded-xl border border-[#d4af37]/30 bg-[#e8c547]/10 p-3">
+                  <Linkedin className="h-4 w-4 text-[#e8c547]" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">LinkedIn</p>
+                  <p className="text-xs uppercase tracking-[0.16em] text-[#c4b48f]">LinkedIn</p>
                   <a
                     href="https://www.linkedin.com/in/charan-sai-musunuru-90ba59261/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-medium hover:text-blue-600 transition duration-300"
+                    className="text-sm font-medium text-[#f7f1e4] transition-colors hover:text-[#e8c547]"
                   >
                     Connect with me
                   </a>
                 </div>
               </div>
+            </div>
 
-              <div className="pt-4 mt-4 border-t border-gray-200">
-                <p className="text-sm text-gray-500">
-                  I'm currently available for freelance work and full-time positions. Let's work together on your next
-                  project!
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+            <div className="mt-8 border-t border-[#d4af37]/20 pt-6">
+              <p className="text-[15px] leading-7 text-[#d8ccb4]">
+                I am currently available for freelance work and full-time positions. Let us work together on your next
+                project.
+              </p>
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>
