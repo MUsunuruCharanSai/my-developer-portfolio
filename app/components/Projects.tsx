@@ -4,11 +4,51 @@ import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Github, ExternalLink, X } from "lucide-react"
+import { Github, ExternalLink, X, ArrowUpRight } from "lucide-react"
+import SectionHeader from "./SectionHeader"
 
 const projects = [
+  {
+    title: "AI-Powered Voice Calling Agent",
+    description:
+      "Built an AI-powered voice calling agent for a consultancy website that automatically connects with potential clients, engages them in real-time conversations, qualifies leads, and helps convert them into customers.",
+    technologies: ["AI Voice Agent", "Real-time Conversation", "Lead Qualification"],
+    liveLink: "https://youtu.be/z1_DFpyG0ek",
+    githubLink: "https://github.com/MUsunuruCharanSai/AI-Voice-Calling-Agent.git",
+    image: "/images/ai-voice-calling-agent.jpg",
+    demoLabel: "Watch Demo",
+    id: 10,
+  },
+  {
+    title: "GeoPlot",
+    description:
+      "A land measurement web app that calculates land area and perimeter by marking points on an interactive map or walking around the boundary using GPS. It supports acres, square feet, hectares, location search, satellite maps, and GeoJSON/JSON export.",
+    technologies: ["React", "Leaflet", "Turf.js", "Express"],
+    liveLink: "https://geoplot-flame.vercel.app",
+    githubLink: "https://github.com/MUsunuruCharanSai/GeoPlot.git",
+    image: "/images/geoplot.png",
+    id: 11,
+  },
+  {
+    title: "Japanese Theme DSA Platform",
+    description:
+      "A DSA learning and practice platform that makes Data Structures and Algorithms preparation engaging and enjoyable. It combines a Japanese-inspired theme and music with focus features, curated DSA problems, coding-platform links, YouTube explanations, and learning resources.",
+    technologies: ["React", "Vite", "Vercel"],
+    liveLink: "https://dsa-sheet-online.vercel.app/",
+    githubLink: "https://github.com/MUsunuruCharanSai/JapaneseThemeDSAPlatform.git",
+    image: "/images/dsa-sheet.png",
+    id: 12,
+  },
+  {
+    title: "Live Gold and Silver Rates",
+    description:
+      "Live Gold & Silver Price website built with Vite and React JS, featuring real-time rate updates and gold/silver quantity calculators with a premium jewellery-inspired UI.",
+    technologies: ["Vite", "React.js", "Vercel"],
+    liveLink: "https://live-gold-and-silver-rates.vercel.app",
+    githubLink: "https://github.com/MUsunuruCharanSai/Live-Gold-and-Silver-Rates.git",
+    image: "/images/gold-silver-rates.png",
+    id: 13,
+  },
   {
     title: "Trend-Wave E-Commerce Website",
     description:
@@ -95,33 +135,29 @@ const projects = [
 ]
 
 const Projects = () => {
-  const [selectedProject, setSelectedProject] = useState(null)
-  const modalRef = useRef(null)
+  const [selectedProject, setSelectedProject] = useState<(typeof projects)[number] | null>(null)
+  const modalRef = useRef<HTMLDivElement>(null)
 
-  // Close modal when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
         setSelectedProject(null)
       }
     }
 
     if (selectedProject) {
       document.addEventListener("mousedown", handleClickOutside)
-      // Prevent body scrolling when modal is open
       document.body.style.overflow = "hidden"
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside)
-      // Restore body scrolling when modal is closed
       document.body.style.overflow = "auto"
     }
   }, [selectedProject])
 
-  // Close modal with escape key
   useEffect(() => {
-    const handleEscKey = (event) => {
+    const handleEscKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setSelectedProject(null)
       }
@@ -137,94 +173,105 @@ const Projects = () => {
   }, [selectedProject])
 
   return (
-    <section id="projects" className="py-16 sm:py-20 bg-gradient-to-br from-purple-50 to-indigo-100">
-      <div className="container mx-auto px-4">
-        <motion.h2
-          className="text-2xl sm:text-3xl md:text-4xl font-bold mb-8 sm:mb-12 text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          My Projects
-        </motion.h2>
+    <section id="projects" className="section-shell">
+      <div className="page-wrap">
+        <SectionHeader eyebrow="Work" title="My Projects" />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {projects.map((project, index) => (
-            <motion.div
+            <motion.article
               key={project.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              whileHover={{ y: -8 }}
+              transition={{ duration: 0.45, delay: Math.min(index * 0.04, 0.24), ease: [0.22, 1, 0.36, 1] }}
+              className="group surface surface-glow flex h-full flex-col overflow-hidden"
             >
-              <Card className="group cursor-pointer overflow-hidden hover:shadow-xl transition-all duration-300 h-full flex flex-col">
-                <div className="relative h-40 sm:h-48 overflow-hidden">
+              <button
+                type="button"
+                onClick={() => setSelectedProject(project)}
+                className="flex h-full flex-col text-left"
+                aria-label={`View project ${project.title}`}
+              >
+                <div className="relative h-56 overflow-hidden sm:h-72 lg:h-80">
                   <Image
                     src={project.image || "/placeholder.svg"}
                     alt={project.title}
                     fill
-                    className="object-cover transform group-hover:scale-110 transition-transform duration-300"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+                    sizes="(max-width: 768px) 100vw, 50vw"
                   />
-                  <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <span className="text-white text-base sm:text-lg font-semibold px-2 text-center">View Details</span>
-                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-80 transition-opacity duration-300 group-hover:opacity-90" />
+                  <span className="absolute bottom-4 right-4 inline-flex items-center rounded-md border border-[#e8c547]/30 bg-black/70 px-3 py-1.5 text-[11px] tracking-wide text-[#f7f1e4] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    View details
+                    <ArrowUpRight className="ml-1 h-3 w-3 text-[#e8c547]" />
+                  </span>
                 </div>
 
-                <CardContent className="p-4 flex flex-col justify-between flex-grow">
-                  <div>
-                    <h3 className="text-lg sm:text-xl font-semibold mb-2">{project.title}</h3>
-                    <p className="text-gray-600 text-sm sm:text-base line-clamp-2 mb-4">{project.description}</p>
+                <div className="flex flex-1 flex-col p-6 sm:p-7">
+                  <h3 className="text-xl font-medium text-[#f7f1e4] sm:text-2xl">{project.title}</h3>
+                  <p className="mt-3 mb-5 line-clamp-3 text-[15px] leading-7 text-[#d8ccb4]">{project.description}</p>
+                  <div className="mt-auto flex flex-wrap gap-2">
+                    {project.technologies.slice(0, 3).map((tech) => (
+                      <span
+                        key={tech}
+                        className="rounded-md border border-[#d4af37]/25 px-2.5 py-1 text-[11px] text-[#e8c547]"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                    {project.technologies.length > 3 && (
+                      <span className="px-1 text-[11px] text-[#c4b48f]">+{project.technologies.length - 3}</span>
+                    )}
                   </div>
-
-                  <Button
-                    onClick={() => setSelectedProject(project)}
-                    className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white mt-auto"
-                  >
-                    View Project
-                  </Button>
-                </CardContent>
-              </Card>
-            </motion.div>
+                </div>
+              </button>
+            </motion.article>
           ))}
         </div>
 
-        {/* Project Modal with improved responsiveness */}
         {selectedProject && (
-          <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 overflow-y-auto">
+          <div
+            className="fixed inset-0 z-[80] flex items-center justify-center overflow-y-auto bg-black/82 p-4 backdrop-blur-sm"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="project-dialog-title"
+          >
             <div
               ref={modalRef}
-              className="bg-white dark:bg-gray-800 rounded-lg max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+              className="flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-[#e8c547]/30 bg-[#12100c] shadow-[0_0_50px_rgba(212,175,55,0.18)]"
             >
-              <div className="relative h-48 sm:h-64">
+              <div className="relative h-56 sm:h-72">
                 <Image
                   src={selectedProject.image || "/placeholder.svg"}
                   alt={selectedProject.title}
                   fill
                   className="object-cover"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 768px"
+                  sizes="(max-width: 640px) 100vw, 768px"
                 />
                 <button
-                  className="absolute top-2 right-2 text-white bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-70 transition-colors"
+                  className="absolute right-3 top-3 rounded-md bg-black/70 p-2 text-[#f7f1e4] transition-colors hover:bg-black hover:text-[#e8c547]"
                   onClick={() => setSelectedProject(null)}
                   aria-label="Close modal"
                 >
-                  <X size={24} />
+                  <X size={18} />
                 </button>
               </div>
 
-              <div className="p-4 sm:p-6 overflow-y-auto">
-                <h3 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4">{selectedProject.title}</h3>
-                <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base mb-4">
-                  {selectedProject.description}
-                </p>
+              <div className="overflow-y-auto p-6 sm:p-8">
+                <h3 id="project-dialog-title" className="text-2xl font-medium text-[#f7f1e4] sm:text-3xl">
+                  {selectedProject.title}
+                </h3>
+                <p className="mt-3 text-[15px] leading-7 text-[#d8ccb4]">{selectedProject.description}</p>
 
-                <div className="mb-4">
-                  <h4 className="font-semibold mb-2 text-sm sm:text-base">Technologies:</h4>
+                <div className="mt-6">
+                  <h4 className="mb-2 text-xs uppercase tracking-[0.18em] text-[#e8c547]">Technologies</h4>
                   <div className="flex flex-wrap gap-2">
                     {selectedProject.technologies.map((tech) => (
                       <span
                         key={tech}
-                        className="bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 text-xs font-medium px-2.5 py-0.5 rounded"
+                        className="rounded-md border border-[#d4af37]/25 px-2.5 py-1 text-xs text-[#e9dfc8]"
                       >
                         {tech}
                       </span>
@@ -232,30 +279,25 @@ const Projects = () => {
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-3 sm:space-x-4">
-                  <Button asChild variant="default" className="w-full sm:w-auto">
-                    <Link
-                      href={selectedProject.liveLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center"
-                    >
-                      <ExternalLink size={16} className="mr-2" />
-                      Live Demo
-                    </Link>
-                  </Button>
-
-                  <Button asChild variant="outline" className="w-full sm:w-auto bg-transparent">
-                    <Link
-                      href={selectedProject.githubLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center"
-                    >
-                      <Github size={16} className="mr-2" />
-                      GitHub
-                    </Link>
-                  </Button>
+                <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+                  <Link
+                    href={selectedProject.liveLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-gold h-11 px-5"
+                  >
+                    <ExternalLink size={14} className="mr-2" />
+                    {selectedProject.demoLabel || "Live Demo"}
+                  </Link>
+                  <Link
+                    href={selectedProject.githubLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-outline-gold h-11 px-5"
+                  >
+                    <Github size={14} className="mr-2" />
+                    GitHub
+                  </Link>
                 </div>
               </div>
             </div>
