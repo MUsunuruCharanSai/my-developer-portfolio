@@ -2,6 +2,9 @@
   "name": "portfolio-website",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=18.17.0"
+  },
   "scripts": {
     "build": "next build",
     "dev": "next dev",
@@ -34,10 +37,5 @@
     "tailwindcss": "3.3.3",
     "tailwindcss-animate": "^1.0.6",
     "typescript": "5.1.6"
-  },
-  "devDependencies": {
-    "@types/node": "^24",
-    "postcss": "^8.5",
-    "typescript": "^5"
   }
 }

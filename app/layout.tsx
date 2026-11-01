@@ -5,6 +5,7 @@ import Header from "./components/Header"
 import Footer from "./components/Footer"
 import SmoothScroll from "./components/SmoothScroll"
 import GoldAtmosphere from "./components/GoldAtmosphere"
+import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-sans" })
 const playfair = Playfair_Display({ subsets: ["latin"], display: "swap", variable: "--font-display" })
@@ -32,6 +33,7 @@ export default function RootLayout({
           <main className="min-h-screen">{children}</main>
           <Footer />
         </div>
+        <Toaster />
         <SmoothScroll />
       </body>
     </html>
