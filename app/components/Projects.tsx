@@ -26,7 +26,8 @@ const projects = [
     technologies: ["React", "Leaflet", "Turf.js", "Express"],
     liveLink: "https://geoplot-flame.vercel.app",
     githubLink: "https://github.com/MUsunuruCharanSai/GeoPlot.git",
-    image: "/images/geoplot.png",
+    image: "/images/geoplot-cover.jpg",
+    imageClass: "object-contain object-center",
     id: 11,
   },
   {
@@ -36,7 +37,8 @@ const projects = [
     technologies: ["React", "Vite", "Vercel"],
     liveLink: "https://dsa-sheet-online.vercel.app/",
     githubLink: "https://github.com/MUsunuruCharanSai/JapaneseThemeDSAPlatform.git",
-    image: "/images/dsa-sheet.png",
+    image: "/images/dsa-sheet.jpg",
+    imageClass: "object-contain object-center",
     id: 12,
   },
   {
@@ -47,6 +49,7 @@ const projects = [
     liveLink: "https://live-gold-and-silver-rates.vercel.app",
     githubLink: "https://github.com/MUsunuruCharanSai/Live-Gold-and-Silver-Rates.git",
     image: "/images/gold-silver-rates.png",
+    imageClass: "object-contain object-center",
     id: 13,
   },
   {
@@ -194,15 +197,14 @@ const Projects = () => {
                 className="flex h-full flex-col text-left"
                 aria-label={`View project ${project.title}`}
               >
-                <div className="relative h-56 overflow-hidden sm:h-72 lg:h-80">
+                <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-[#d4af37]/30 bg-[#0b0a08]">
                   <Image
                     src={project.image || "/placeholder.svg"}
                     alt={project.title}
                     fill
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+                    className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.04]"
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-80 transition-opacity duration-300 group-hover:opacity-90" />
                   <span className="absolute bottom-4 right-4 inline-flex items-center rounded-md border border-[#e8c547]/30 bg-black/70 px-3 py-1.5 text-[11px] tracking-wide text-[#f7f1e4] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                     View details
                     <ArrowUpRight className="ml-1 h-3 w-3 text-[#e8c547]" />
@@ -242,12 +244,12 @@ const Projects = () => {
               ref={modalRef}
               className="flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-[#e8c547]/30 bg-[#12100c] shadow-[0_0_50px_rgba(212,175,55,0.18)]"
             >
-              <div className="relative h-56 sm:h-72">
+              <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-[#d4af37]/30 bg-[#0b0a08]">
                 <Image
                   src={selectedProject.image || "/placeholder.svg"}
                   alt={selectedProject.title}
                   fill
-                  className="object-cover"
+                  className="object-cover object-center"
                   sizes="(max-width: 640px) 100vw, 768px"
                 />
                 <button
